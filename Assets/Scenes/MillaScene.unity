@@ -153,6 +153,9 @@ MonoBehaviour:
   - {fileID: 264886644}
   - {fileID: 1639234573}
   - {fileID: 816658988}
+  isMoving: 0
+  waypointIndex: 0
+  movespeed: 10
 --- !u!4 &158105794
 Transform:
   m_ObjectHideFlags: 0
