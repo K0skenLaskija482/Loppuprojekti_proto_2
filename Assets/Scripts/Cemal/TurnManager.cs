@@ -12,13 +12,20 @@ public class TurnManager : MonoBehaviour
 
     public Player CurrentPlayer => players[currentPlayerIndex];
 
+    private void Start()
+    {
+        GameManager.Instance?.UpdateTurnText(CurrentPlayer);
+    }
+
     // UI butonuna veya bir input olayina baglanacak metot.
     public void RollDiceAndMove()
     {
         if (isMoving) return;
+        if (GameManager.Instance != null && GameManager.Instance.IsGameOver) return;
 
         int roll = Random.Range(1, 7); // 1-6 arasi zar
-        Debug.Log($"{CurrentPlayer.playerName} zar attı: {roll}");
+        Debug.Log($"{CurrentPlayer.playerName} rolled: {roll}");
+        GameManager.Instance?.UpdateDiceText(CurrentPlayer, roll);
 
         isMoving = true;
         StartCoroutine(BoardMover.Instance.MoveSteps(CurrentPlayer, roll, EndTurn));
@@ -28,6 +35,7 @@ public class TurnManager : MonoBehaviour
     {
         isMoving = false;
         currentPlayerIndex = (currentPlayerIndex + 1) % players.Length;
-        Debug.Log($"Sıra: {CurrentPlayer.playerName}");
+        Debug.Log($"Turn: {CurrentPlayer.playerName}");
+        GameManager.Instance?.UpdateTurnText(CurrentPlayer);
     }
 }

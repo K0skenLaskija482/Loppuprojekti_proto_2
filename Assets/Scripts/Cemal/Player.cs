@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 // Oyuncu piyonu. Sahnede: bir GameObject (SpriteRenderer ile piyon gorseli),
@@ -14,11 +15,22 @@ public class Player : MonoBehaviour
     [Header("Hareket")]
     public float moveSpeed = 4f;
 
+    // Skor her degistiginde tetiklenir; GameManager buna abone olup UI'yi gunceller.
+    public event Action<Player> OnScoreChanged;
+
     public void AddScore(int amount)
     {
         score += amount;
-        Debug.Log($"{playerName} puan: {score} ({(amount >= 0 ? "+" : "")}{amount})");
-        // TODO: Buraya UI skor gostergesini guncelleyen bir event/cagri ekleyebilirsin.
+        Debug.Log($"{playerName} score: {score} ({(amount >= 0 ? "+" : "")}{amount})");
+        OnScoreChanged?.Invoke(this);
+    }
+
+    // Portal node'u tarafindan cagrilir: mevcut toplam puani 2'ye katlar.
+    public void DoubleScore()
+    {
+        score *= 2;
+        Debug.Log($"{playerName} score doubled: {score}");
+        OnScoreChanged?.Invoke(this);
     }
 
     public void SetStartNode(BoardNode node)

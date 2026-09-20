@@ -61,10 +61,9 @@ public class BoardMover : MonoBehaviour
 
             yield return StartCoroutine(MoveVisual(player, current, next));
             current = next;
+            player.currentNode = current;
+            current.OnLand(player); // gecilen HER node kendi etkisini uygular, sadece son node degil
         }
-
-        player.currentNode = current;
-        current.OnLand(player);
 
         onFinished?.Invoke();
     }

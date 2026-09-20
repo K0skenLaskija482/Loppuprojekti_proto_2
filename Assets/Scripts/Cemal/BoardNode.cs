@@ -23,6 +23,9 @@ public class BoardNode : MonoBehaviour
 
     private bool isSelectable = false;
 
+    // Bonus ve Portal etkileri sadece ilk basista uygulanir, sonraki gelislerde hicbir sey olmaz.
+    private bool effectUsed = false;
+
     private void Awake()
     {
         if (highlightObject != null)
@@ -50,17 +53,30 @@ public class BoardNode : MonoBehaviour
         switch (type)
         {
             case NodeType.Normal:
+                // Normal node her basista puan verir.
                 player.AddScore(scoreValue);
                 break;
+
             case NodeType.Bonus:
-                player.AddScore(scoreValue * 2);
+                // Bonus node sadece ilk basista puan verir, sonraki gelislerde hicbir sey olmaz.
+                if (!effectUsed)
+                {
+                    player.AddScore(scoreValue * 2);
+                    effectUsed = true;
+                }
                 break;
+
             case NodeType.Penalty:
                 player.AddScore(-scoreValue);
                 break;
+
             case NodeType.Portal:
-                // Ozel efekt istersen (isinlanma, ekstra hamle vb.) buraya ekle.
-                player.AddScore(scoreValue);
+                // Portal sadece ilk basista oyuncunun toplam puanini 2'ye katlar, sonraki gelislerde hicbir sey olmaz.
+                if (!effectUsed)
+                {
+                    player.DoubleScore();
+                    effectUsed = true;
+                }
                 break;
         }
     }
